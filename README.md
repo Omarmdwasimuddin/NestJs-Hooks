@@ -35,31 +35,17 @@ export class DatabaseService implements OnModuleInit, OnApplicationShutdown {
 }
 ```
 
-```bash
-# install ValidationPipe
-$ npm install class-validator class-transformer
-```
-
 ##### Note: main.ts e add koro app.enableShutdownHooks();
 
 ```bash
 # main.ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  app.useGlobalPipes(new ValidationPipe({
-    whitelist: true,
-    forbidNonWhitelisted: true,
-  }));
-
   await app.listen(process.env.PORT ?? 3000);
-
   app.enableShutdownHooks();
-
 }
 bootstrap();
 ```
