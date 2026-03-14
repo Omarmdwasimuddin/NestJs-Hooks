@@ -81,11 +81,11 @@ Application Shutdown
 
 NestJS এ প্রধান কয়েকটি lifecycle hook আছে:
 
-1️⃣ `OnModuleInit`
-2️⃣ `OnApplicationBootstrap`
-3️⃣ `OnModuleDestroy`
-4️⃣ `BeforeApplicationShutdown`
-5️⃣ `OnApplicationShutdown`
+-  `OnModuleInit`
+-  `OnApplicationBootstrap`
+-  `OnModuleDestroy`
+-  `BeforeApplicationShutdown`
+-  `OnApplicationShutdown`
 
 ---
 
