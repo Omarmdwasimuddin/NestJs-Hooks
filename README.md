@@ -55,3 +55,189 @@ bootstrap();
 
 ##### ctrl+c
 ![](/public/Img/hooksoutput2.png)
+
+
+NestJS এ Lifecycle Hooks হলো এমন কিছু method যেগুলো application বা module এর বিভিন্ন stage এ automatically run হয়।
+
+অর্থাৎ NestJS app যখন start হয়, module load হয়, destroy হয়, তখন কিছু নির্দিষ্ট method automatically execute হয় — এগুলোকেই Lifecycle Hooks বলা হয়।
+
+সহজভাবে:
+
+```
+Application Start
+      ↓
+Module Initialize
+      ↓
+Application Ready
+      ↓
+Application Shutdown
+```
+
+এই প্রতিটি stage এ NestJS কিছু hooks provide করে।
+
+---
+
+#### NestJS Lifecycle Hooks গুলো
+
+NestJS এ প্রধান কয়েকটি lifecycle hook আছে:
+
+1️⃣ `OnModuleInit`
+2️⃣ `OnApplicationBootstrap`
+3️⃣ `OnModuleDestroy`
+4️⃣ `BeforeApplicationShutdown`
+5️⃣ `OnApplicationShutdown`
+
+---
+
+#### OnModuleInit
+
+যখন module initialize হয়, তখন এই hook run হয়।
+
+##### Example
+
+```ts
+import { Injectable, OnModuleInit } from '@nestjs/common';
+
+@Injectable()
+export class UserService implements OnModuleInit {
+
+  onModuleInit() {
+    console.log('Module initialized');
+  }
+
+}
+```
+
+#### কখন ব্যবহার হয়
+
+- Database connection check
+- Initial data load
+- Cache warmup
+
+---
+
+#### OnApplicationBootstrap
+
+যখন সব module load হয়ে যায় এবং application start হতে যাচ্ছে, তখন run হয়।
+
+##### Example
+
+```ts
+import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
+
+@Injectable()
+export class AppService implements OnApplicationBootstrap {
+
+  onApplicationBootstrap() {
+    console.log('Application fully started');
+  }
+
+}
+```
+
+---
+
+#### OnModuleDestroy
+
+যখন module destroy হয়, তখন run হয়।
+
+##### Example
+
+```ts
+import { Injectable, OnModuleDestroy } from '@nestjs/common';
+
+@Injectable()
+export class UserService implements OnModuleDestroy {
+
+  onModuleDestroy() {
+    console.log('Module destroyed');
+  }
+
+}
+```
+
+---
+
+#### BeforeApplicationShutdown
+
+Application shutdown হওয়ার ঠিক আগে run হয়।
+
+##### Example
+
+```ts
+import { Injectable, BeforeApplicationShutdown } from '@nestjs/common';
+
+@Injectable()
+export class AppService implements BeforeApplicationShutdown {
+
+  beforeApplicationShutdown() {
+    console.log('App shutting down...');
+  }
+
+}
+```
+
+---
+
+#### OnApplicationShutdown
+
+Application পুরোপুরি shutdown হওয়ার সময় run হয়।
+
+```ts
+import { Injectable, OnApplicationShutdown } from '@nestjs/common';
+
+@Injectable()
+export class AppService implements OnApplicationShutdown {
+
+  onApplicationShutdown() {
+    console.log('Application shutdown');
+  }
+
+}
+```
+
+---
+
+#### Lifecycle Flow
+
+NestJS app এর lifecycle সাধারণত এমন হয়:
+
+```
+App Start
+   ↓
+onModuleInit()
+   ↓
+onApplicationBootstrap()
+   ↓
+Application Running
+   ↓
+onModuleDestroy()
+   ↓
+beforeApplicationShutdown()
+   ↓
+onApplicationShutdown()
+```
+
+---
+
+#### Real Project Example
+
+ধরো তুমি Prisma database use করছো।
+
+App start হলে database connect করবে:
+
+```ts
+async onModuleInit() {
+  await this.prisma.$connect();
+}
+```
+
+App shutdown হলে database disconnect করবে:
+
+```ts
+async onApplicationShutdown() {
+  await this.prisma.$disconnect();
+}
+```
+
+---
